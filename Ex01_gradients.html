@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>GRADIENTS</title>
+  <style>
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+  <input type="button" value="EX.1" onclick="ex1()"> </input>
+  <input type="button" value="EX.2" onclick="ex2()"> </input>
+  <canvas id="myCanvas" width="500" height="500" style="border:solid 3px orange">
+    Your browser does not support HTML5 Canvas.
+  </canvas>
+
+  <script>
+    const canvas = document.querySelector("#myCanvas");
+    const ctx = canvas.getContext("2d");
+
+    //ARROW
+    function ex1() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height); //apaga o Canvas
+      ctx.beginPath()
+      ctx.moveTo(250, 320)
+      ctx.lineTo(300, 350)
+      ctx.lineTo(260, 300)
+      ctx.lineTo(260, 150)
+      ctx.lineTo(300, 150)
+      ctx.lineTo(250, 50)
+      ctx.lineTo(200, 150)
+      ctx.lineTo(240, 150)
+      ctx.lineTo(240, 300)
+      ctx.lineTo(200, 350)
+      ctx.lineTo(250, 320)
+      ctx.stroke()
+      let rainbow = ctx.createLinearGradient(100, 50 , 100, 350);
+      rainbow.addColorStop(0, "red");
+      rainbow.addColorStop(0.2, "orange");
+      rainbow.addColorStop(0.4, "yellow");
+      rainbow.addColorStop(0.6, "green");
+      rainbow.addColorStop(0.8, "blue");
+      rainbow.addColorStop(1, "purple");
+      ctx.fillStyle = rainbow
+      ctx.fill()
+      //TODO
+    }
+
+
+    //WHEEL
+    function ex2() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath()
+      ctx.arc( cX, cY, R, 0, 2 * Math.PI)
+      ctx.stroke()
+      
+      ctx.beginPath()
+      ctx.arc( cX, cY, R / 2, 0, 2 * Math.PI)
+      ctx.stroke()
+
+      for (let i = 0; i <= 2 * N; i++){
+        let theta = i * 2 * Math.PI / (2 * N)
+        let x = cX + R * Math.cos(theta)
+        let y = cY + R * Math.sin(theta)
+        if (i == 0)
+          ctx.moveTo(x,y)
+        else 
+          ctx.lineTO(x, y)
+      }
+      ctx.closePath()
+      ctx.stroke()
+      //TODO
+    }
+  </script>
+</body>
+
+</html>

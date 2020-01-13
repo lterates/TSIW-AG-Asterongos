@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Asterongos</title>
+    <link rel="stylesheet" type="text/css" href="asterongo.css">
+</head>
+
+<body>
+    <div id='container'>
+        <canvas id="myCanvas"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.querySelector('#myCanvas')
+        const ctx = canvas.getContext('2d');
+
+        let canvasW = 1000;
+        let canvasH = 900;
+        let ship;
+        let keys = [];
+        let bullet = [];
+        let asteroids = [];
+        let score = 0;
+        let lives = 3;
+
+        document.addEventListener('DOMContentLoaded', SetupCanvas);
+
+        function SetupCanvas() {
+            canvas.width = canvasW
+            canvas.height = canvasH
+            ctx.fillStyle = 'black'
+            ctx.fillRect (0, 0, canvas.width, canvas.height);
+            ship = new Ship();
+
+            for (let i = 0; i< 6; i++){
+                asteroids.push(new Asteroid());
+            }
+
+            document.body.addEventListener("keydown", function(e){
+                keys[e.keyCode] = true;
+            });
+            document.body.addEventListener("keyup", function(e){
+                keys[e.keyCode] = false;
+                if (e.keyCode === 32){
+                    bullet.push(new Bullet(ship.angle));
+                }
+            });
+            Render()
+        }
+
+        // ~~~~~~~~~~~~~~~~~~~~ CLASSE DA NAVE ~~~~~~~~~~~~~~~~~~~~~~~~
+        class Ship {
+            constructor(){
+                this.visible = true;
+                this.x = canvasW / 2
+                this.y = canvasH / 2
+                this.movingForward = false;
+                this.speed = 0.1
+                this.velX = 0
+                this.velY = 0
+                this.rotateSpeed = 0.001
+                this.radius = 15;
+                this.angle = 0
+                this.strokeColor = 'white'
+                this.pointerX = canvasW / 2 + 15;
+                this.pointerY = canvasH / 2;
+            }
+
+            Rotate(dir){
+                this.angle += this.rotateSpeed * dir;
+            }
+
+            Update(){
+                let radians = this.angle / Math.PI * 180;
+                if (this.movingForward) {
+                    this.velX += Math.cos(radians) * this.speed;
+                    this.velY += Math.sin(radians) * this.speed;
+                }
+                if (this.x < this.radius) {
+                    this.x = canvas.width
+                }
+                if (this.x > canvas.width) {
+                    this.x = this.radius
+                }
+                if (this.y < this.radius) {
+                    this.y = canvas.height
+                }
+                if (this.y > canvas.height) {
+                    this.y = this.radius
+                }
+                this.velX *= 0.99
+                this.velY *= 0.99
+
+                this.x -= this.velX;
+                this.y -= this.velY;
+            }
+
+            Draw(){
+                ctx.strokeStyle = this.strokeColor;
+                ctx.beginPath();
+                let vertAngle = ((Math.PI *2) / 3);
+                let radians = this.angle / Math.PI * 180;
+                this.pointerX = this.x - this.radius * Math.cos(radians)
+                this.pointerY = this.y - this.radius * Math.sin(radians)
+                for (let i = 0; i < 3; i++){
+                    ctx.lineTo(this.x - this.radius * Math.cos(vertAngle * i + radians),
+                    this.y - this.radius * Math.sin(vertAngle * i + radians));
+                }
+                ctx.closePath();
+                ctx.stroke();
+            }
+        }
+
+        // ~~~~~~~~~~~~~~~~~~~~ CLASSE DA NAVE ~~~~~~~~~~~~~~~~~~~~~~~~
+        class Bullet{
+            constructor(angle){
+                this.visible = true;
+                this.x = ship.pointerX;
+                this.y = ship.pointerY;
+                this.angle = angle
+                this.height = 4;
+                this.width = 4;
+                this.speed = 5;
+                this.velX = 0
+                this.velY = 0
+            }
+            Update(){
+                let radians = this.angle / Math.PI * 180
+                this.x -= Math.cos(radians) * this.speed;
+                this.y -= Math.sin(radians) * this.speed;
+            }
+            Draw(){
+                ctx.fillStyle = 'white';
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+        }
+
+        // ~~~~~~~~~~~~~~~~~~~~ CLASSE DA NAVE ~~~~~~~~~~~~~~~~~~~~~~~~
+        class Asteroid{
+            constructor(x,y){
+                this.visible = true;
+                this.x = Math.floor(Math.random() * canvasW);
+                this.y = Math.floor(Math.random() * canvasH);
+                this.speed = 1;
+                this.radius = 50;
+                this.angle = Math.floor(Math.random() * 359)
+                this.strokeColor = 'white';
+            }
+            Update(){
+                let radians = this.angle / Math.PI * 180
+                this.x -= Math.cos(radians) * this.speed;
+                this.y -= Math.sin(radians) * this.speed;
+                if (this.movingForward) {
+                    this.velX += Math.cos(radians) * this.speed;
+                    this.velY += Math.sin(radians) * this.speed;
+                }
+                if (this.x < this.radius) {
+                    this.x = canvas.width
+                }
+                if (this.x > canvas.width) {
+                    this.x = this.radius
+                }
+                if (this.y < this.radius) {
+                    this.y = canvas.height
+                }
+                if (this.y > canvas.height) {
+                    this.y = this.radius
+                }
+            }
+            Draw(){
+                ctx.beginPath()
+                let vertAngle = ((Math.PI *2) / 6)
+                let radians = this.angle / Math.PI * 180
+                for (let i = 0; i < 6; i++){
+                    ctx.lineTo(this.x - this.radius * Math.cos(vertAngle * i + radians),
+                    this.y - this.radius * Math.sin(vertAngle * i + radians));
+                }
+                ctx.closePath();
+                ctx.stroke();
+            }
+        }
+
+        function Render() {
+            ship.movingForward = (keys[87]);
+            if(keys[68]) {
+                ship.Rotate(1);
+            }
+            if(keys[65]) {
+                ship.Rotate(-1);
+            }
+            if(keys[16]) {
+                
+            }
+            ctx.clearRect(0,0, canvasW, canvasH);
+            ship.Update();
+            ship.Draw();
+            if (bullet.length !== 0){
+                for (let i = 0; i < bullet.length; i++){
+                    bullet[i].Update()
+                    bullet[i].Draw()
+                }
+            }
+            if (asteroids.length !== 0){
+                for (let j = 0; j < asteroids.length; j++){
+                    asteroids[j].Update()
+                    asteroids[j].Draw()
+                }
+            }
+            requestAnimationFrame(Render);
+        }
+    </script>
+</body>
+</html>
