@@ -9,6 +9,6 @@ body{
 }
 
 #myCanvas{
-    background: #000;
+    background: transparent;
     border: 1px solid #ffffff;
 }

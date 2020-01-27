@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Asterongos</title>
+    <link rel="stylesheet" type="text/css" href="asterongo.css">
+    <!-- Fonte Retrozinha fofinha lindinha-->
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <div style="font-family:'Press Start 2P'; color:white; text-align: center;" id='container'>
+        A S T E R O N G O S
+        <div style="border: 1px solid white ; width: 1000px; height: 900px;"> <br><br><br>
+            <!--GRUPO SVG-->
+            <svg width="600" height="700" style="overflow: visible">
+                <!--TÍTULO-->
+                <g id="title">
+                    <text fill="white" x="3" y="75" font-size="60px">ASTERONGOS</text>
+                </g>
+
+                <!--MENU-->
+                <a href="asteroids.html">
+                    <text id="start" font-size="40" fill="white" x="130" y="300">START</text>
+                </a>
+                <a href="menuControls.html">
+                    <text id="controls" font-size="40" fill="white" x="130" y="400">CONTROLS</text>
+                <a href="javascript:close_window();">
+                    <text id="quit" font-size="40" fill="white" x="130" y="500">QUIT</text>
+                </a>
+                <text id="quit" font-size="22" fill="white" x="-180" y="820">Developed by Eduardo Ferreira & Maria Santos</text>
+            </svg>
+        </div>
+        <button onclick="window.location.href = 'asteroids.html';">JOGO</button>
+    </div>
+
+    <script>
+    function close_window() {
+        if (confirm("Fechar ASTERONGOS?")) {
+            close();
+        }
+    }
+    </script>
+</body>
+
+</html>
