@@ -89,7 +89,7 @@
         // ~~~~~~~~~~~~~~~~~~~~ CLASSE DA NAVE ~~~~~~~~~~~~~~~~~~~~~~~~
         class Ship {
             constructor(){
-                this.visible = true;
+                this.visible = true; //problema de ficar visible no gameover na mesma :c
                 this.x = canvasW / 2
                 this.y = canvasH / 2
                 this.thrusting = false;
@@ -264,6 +264,7 @@
             if(keys[65]) {
                 ship.Rotate(-1);
             }
+            //Pausa do jogo (ainda não funciona e não sei se vamos ter tempo honestamente)
             if(keys[16]) {
                 
             }
@@ -299,9 +300,9 @@
 
             LivesLeft();
             
-            //Sempre que há asteróides em jogo, tá a ser calculado se há colisões ou não
+            //Sempre que há asteróides em jogo, tá a ser calculado se há colisões com a Nave
             if (asteroids.length !== 0) {
-                for (let k = 0; k< asteroids.length; k++){
+                for (let k = 0; k < asteroids.length; k++){
                     if(Collisions(ship.x, ship.y, 11, asteroids[k].x, asteroids[k].y, asteroids[k].collisionRadius)){
                         ship.x = canvasW / 2;
                         ship.y = canvasH / 2;
@@ -312,12 +313,13 @@
                 }
             }
             
+            //Código de colisões das balas com os asteroides inspirado num tutorial
             if (asteroids.length !== 0 && bullets.length != 0){
                 loop1:
                 for(let l = 0; l < asteroids.length; l++){
                     for(let m = 0; m < bullets.length; m++){
                         if(Collisions(bullets[m].x, bullets[m].y, 3, asteroids[l].x, asteroids[l].y, asteroids[l].collisionRadius)){
-                            if(asateroids[l].level === 1){
+                            if(asteroids[l].level === 1){
                                 asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 25, 2, 22));
                                 asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 25, 2, 22));
                             } else if(asteroids[l].level === 2){
