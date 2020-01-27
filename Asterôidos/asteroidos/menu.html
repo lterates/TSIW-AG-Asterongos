@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,26 +10,40 @@
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         #start:hover {
-            fill: rgba(255, 0, 0, 0.767);
-            stroke: white;
-            stroke-width: 3px;
+            animation-name: hoverMenu;
+            animation-duration: 1s;
+            animation-timing-function: ease;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+            animation-delay:0s;
         }
 
         #controls:hover {
-            fill:  rgba(255, 0, 0, 0.767);
-            stroke: white;
-            stroke-width: 3px;
+            animation-name: hoverMenu;
+            animation-duration: 1s;
+            animation-timing-function: ease;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+            animation-delay:0s;
         }
 
         #quit:hover {
-            fill:  rgba(255, 0, 0, 0.767);
-            stroke: white;
-            stroke-width: 3px;
+            animation-name: hoverMenu;
+            animation-duration: 1s;
+            animation-timing-function: ease;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+            animation-delay:0s;
         }
 
         @keyframes twinkle {
             0% {stroke-opacity: 0.1}
             100% {stroke-opacity: 1}
+        }
+
+        @keyframes hoverMenu {
+            0% {fill: white; stroke: transparent; stroke-width: 3;}
+            100% {fill: rgba(255, 0, 0, 0.767); stroke: white; stroke-width: 3;}
         }
 
         #star1 {
