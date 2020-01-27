@@ -22,10 +22,13 @@
         let canvasH = 900;
         let ship;
         let keys = [];
-        let bullet = [];
+        let bullets = [];
         let asteroids = [];
         let score = 0;
         let lives = 3;
+        let step = 1;
+        let highScore;
+        let localStorageName = "HighScore";
 
         document.addEventListener('DOMContentLoaded', SetupCanvas);
 
@@ -40,17 +43,43 @@
                 asteroids.push(new Asteroid());
             }
 
-            document.body.addEventListener("keydown", function(e){
+            //Event Handlers movidos para poder parar os controlos durante o gameover
+            //Posso mudar depois mas idk vou ver
+
+            /* document.body.addEventListener("keydown", function(e){
                 keys[e.keyCode] = true;
             });
             document.body.addEventListener("keyup", function(e){
                 keys[e.keyCode] = false;
                 if (e.keyCode === 32){
-                    bullet.push(new Bullet(ship.angle));
+                    bullets.push(new  Bullet(ship.angle));
                 }
-            });
+            }); */
+
+            document.body.addEventListener("keydown", HandleKeyDown);
+            document.body.addEventListener("keyup", HandleKeyUp);
+
+           // Recebe os dados da HighScore guardados na localStorage 
+            if (localStorage.getItem(localStorageName) == null) {
+                highScore = 0;
+            } else {
+                highScore = localStorage.getItem(localStorageName);
+            }
+
             Render()
         }
+
+        // Mais EventHandlers para poder proibir o movimento da nave após o Game Over
+        function HandleKeyDown(e){
+            keys[e.keyCode] = true;
+        }
+        function HandleKeyUp(e){
+            keys[e.keyCode] = false;
+            if (e.keyCode === 32){
+                bullets.push(new Bullet(ship.angle));
+            }
+        }
+
 
         // ~~~~~~~~~~~~~~~~~~~~ CLASSE DA NAVE ~~~~~~~~~~~~~~~~~~~~~~~~
         class Ship {
@@ -191,28 +220,30 @@
             let radiusSum;
             let xDiff;
             let yDiff
+            
             radiusSum = r1 + r2;
             xDiff = p1x - p2x;
             yDiff = p1y - p2y;
             if (radiusSum > Math.sqrt((xDiff * xDiff) + (yDiff * yDiff))){
                 return true;
             }
-            else{
+            else {
                 return false;
             }
         }
 
-        function DrawLifeShips() {
-            let startX = 1350;
+        // Mostra as vidas restantes que o jogador tem
+        // (!) Quando o asteroide tà em level 3, a morte é instantânea, fix l8r
+        function DrawLifeShips(){
+            let startX = 950;
             let startY = 10;
-            let points = [[9,9], [-9,9]]
+            let points = [[9, 9], [-9, 9]];
             ctx.strokeStyle = 'white';
-            for (let i = 0; i <lives; i++) {
+            for(let i = 0; i < lives; i++){
                 ctx.beginPath();
                 ctx.moveTo(startX, startY);
                 for(let j = 0; j < points.length; j++){
-                    ctx.lineTo(startX + points[j] [0], startY + points [j] [1])
-                }
+                    ctx.lineTo(startX + points[j][0], startY + points[j][1])}
                 ctx.closePath();
                 ctx.stroke();
                 startX -= 30;
@@ -233,14 +264,33 @@
             }
             ctx.clearRect(0,0, canvasW, canvasH);
             ctx.fillStyle = 'white'
-            ctx.font='21px Arial';
+            ctx.font='20px Arial';
             ctx.fillText('SCORE: ' + score.toString(), 20, 35)
+            ctx.fillText('LEVEL: ' + step.toString(), 880, 70)
+            // Vidas chegam ao fim -- GAME OVER
             if(lives <= 0){
-                ship,visible = false;
+                document.body.removeEventListener("keydown", HandleKeyDown);
+                document.body.removeEventListener("keyup", HandleKeyUp);
+                ship.visible = false;
                 ctx.fillStyle = 'white';
                 ctx.font='50px Arial';
                 ctx.fillText('GAME OVER', canvasW / 2 - 150, canvasH / 2)
             }      
+            
+            //Nível Novo no caso de derrotar todos os asteroides
+            if(asteroids.length === 0){
+                step += 1;
+                ship.x = canvasW / 2;
+                ship.y = canvasH / 2;
+                ship.velX = 0;
+                ship.velY = 0;
+                for(let i = 0; i < 6; i++){
+                    let asteroid = new Asteroid();
+                    asteroid.speed += .5;
+                    asteroids.push(asteroid);
+                }
+            }
+
             DrawLifeShips();
             
             if (asteroids.length !== 0) {
@@ -255,26 +305,25 @@
                 }
             }
             
-            if (asteroids.length !== 0 && bullet.length != 0) {
+            if (asteroids.length !== 0 && bullets.length != 0){
                 loop1:
-                    for (let l = 0; l < asteroids.lenght; l++){
-                        for (let m = 0; m < bullet.length; m++){
-                            if (CircleCollision(bullets[m].x, bullet[m].y, 3, asteroids[l].x, asteroids[l].y, asteroids[l].collisionRadius)){
-                                if(asteroids[l].level === 1){
-                                    asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 25, 2, 22));
-                                    asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 25, 2, 22));
-                                }
-                                else if (asteroids[l].level === 2) {
-                                    asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 15, 3, 12));
-                                    asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 15, 3, 12));
-                                }
-                                ãsteroids.splice(l, 1);
-                                bullet.splice(m, 1);
-                                score += 20;
-                                break loop1;
+                for(let l = 0; l < asteroids.length; l++){
+                    for(let m = 0; m < bullets.length; m++){
+                        if(CircleCollision(bullets[m].x, bullets[m].y, 3, asteroids[l].x, asteroids[l].y, asteroids[l].collisionRadius)){
+                            if(asteroids[l].level === 1){
+                                asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 25, 2, 22));
+                                asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 25, 2, 22));
+                            } else if(asteroids[l].level === 2){
+                                asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 15, 3, 12));
+                                asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 15, 3, 12));
                             }
+                            asteroids.splice(l,1);
+                            bullets.splice(m,1);
+                            score += 20;
+                            break loop1;
                         }
                     }
+                }
             }
 
             ship.Update();
@@ -284,10 +333,10 @@
                 ship.Update();
                 ship.Draw();
             }
-            if (bullet.length !== 0){
-                for (let i = 0; i < bullet.length; i++){
-                    bullet[i].Update()
-                    bullet[i].Draw()
+            if (bullets.length !== 0){
+                for (let i = 0; i < bullets.length; i++){
+                    bullets[i].Update()
+                    bullets[i].Draw()
                 }
             }
             if (asteroids.length !== 0){
@@ -296,6 +345,13 @@
                     asteroids[j].Draw(j)
                 }
             }
+
+            //  ~~~~~~~~~~~~~~~~~~~~ HIGH SCORE NA LOCAL STORAGE ~~~~~~~~~~~~~~~~~~~~~~~~
+            highScore = Math.max(score, highScore);
+            localStorage.setItem(localStorageName, highScore);
+            ctx.font = '20px Arial';
+            ctx.fillText("HIGH SCORE : " + highScore.toString(), 20, 70);
+
             requestAnimationFrame(Render);
         }
     </script>
