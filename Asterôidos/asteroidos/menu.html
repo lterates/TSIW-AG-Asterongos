@@ -11,22 +11,65 @@
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         #start:hover {
-            fill: red;
+            fill: rgba(255, 0, 0, 0.767);
             stroke: white;
             stroke-width: 3px;
         }
 
         #controls:hover {
-            fill: red;
+            fill:  rgba(255, 0, 0, 0.767);
             stroke: white;
             stroke-width: 3px;
         }
 
         #quit:hover {
-            fill: red;
+            fill:  rgba(255, 0, 0, 0.767);
             stroke: white;
             stroke-width: 3px;
         }
+
+        @keyframes twinkle {
+            0% {stroke-opacity: 0.1}
+            100% {stroke-opacity: 1}
+        }
+
+        #star1 {
+            animation-name: twinkle;
+            animation-duration: 1s;
+            animation-timing-function: ease;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+            animation-delay:0s;
+        }
+
+        #star2 {
+            animation-name: twinkle;
+            animation-duration: 1s;
+            animation-timing-function: ease;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+            animation-delay:2s;
+        }
+
+        #star3 {
+            animation-name: twinkle;
+            animation-duration: 1s;
+            animation-timing-function: ease;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+            animation-delay:3s;
+        }
+
+        #star4 {
+            animation-name: twinkle;
+            animation-duration: 1s;
+            animation-timing-function: ease;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+            animation-delay:4s;
+        }
+
+
     </style>
 </head>
 
@@ -37,29 +80,29 @@
             <!--GRUPO SVG-->
             <svg width="600" height="700" style="overflow: visible">
                 <g id="starsBackground" transform="rotate(45 5 5)">
-                    <rect x="110" y="120" height="3" width="3" fill="white" stroke="white" stroke-width="4" stroke-opacity="0.8"/>
-                    <rect x="450" y="650" height="3" width="3" fill="white" stroke="blue" stroke-width="4" stroke-opacity="0.5"/>
-                    <rect x="200" y="420" height="3" width="3" fill="white" stroke="red" stroke-width="4" stroke-opacity="0.5"/>
-                    
-                    <rect x="340" y="180" height="3" width="3" fill="white" stroke="white" stroke-width="4" stroke-opacity="0.8"/>
-                    <rect x="438" y="-120" height="3" width="3" fill="white" stroke="blue" stroke-width="4" stroke-opacity="0.5"/>
-                    <rect x="322" y="98" height="3" width="3" fill="white" stroke="red" stroke-width="4" stroke-opacity="0.5"/>
-                    
-                    <rect x="260" y="293" height="3" width="3" fill="white" stroke="white" stroke-width="4" stroke-opacity="0.8"/>
-                    <rect x="836" y="500" height="3" width="3" fill="white" stroke="blue" stroke-width="4" stroke-opacity="0.5"/>
-                    <rect x="255" y="512" height="3" width="3" fill="white" stroke="red" stroke-width="4" stroke-opacity="0.5"/>
-                    
-                    <rect x="750" y="15" height="3" width="3" fill="white" stroke="white" stroke-width="4" stroke-opacity="0.8"/>
-                    <rect x="500" y="-450" height="3" width="3" fill="white" stroke="blue" stroke-width="4" stroke-opacity="0.5"/>
-                    <rect x="900" y="200" height="3" width="3" fill="white" stroke="red" stroke-width="4" stroke-opacity="0.5"/>
-                    
-                    <rect x="240" y="-280" height="3" width="3" fill="white" stroke="white" stroke-width="4" stroke-opacity="0.8"/>
-                    <rect x="450" y="350" height="3" width="3" fill="white" stroke="blue" stroke-width="4" stroke-opacity="0.5"/>
-                    <rect x="700" y="-150" height="3" width="3" fill="white" stroke="red" stroke-width="4" stroke-opacity="0.5"/>
-                    
-                    <rect x="110" y="120" height="3" width="3" fill="white" stroke="white" stroke-width="4" stroke-opacity="0.8"/>
-                    <rect x="950" y="-100" height="3" width="3" fill="white" stroke="blue" stroke-width="4" stroke-opacity="0.5"/>
-                    <rect x="200" y="420" height="3" width="3" fill="white" stroke="red" stroke-width="4" stroke-opacity="0.5"/>
+                    <rect id="star1" x="110" y="120" height="3" width="3" fill="white" stroke="white" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star1" x="450" y="650" height="3" width="3" fill="white" stroke="blue" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star1" x="200" y="420" height="3" width="3" fill="white" stroke="red" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star1" x="340" y="180" height="3" width="3" fill="white" stroke="white" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star1" x="438" y="-120" height="3" width="3" fill="white" stroke="blue" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star1" x="322" y="98" height="3" width="3" fill="white" stroke="red" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star2" x="260" y="293" height="3" width="3" fill="white" stroke="white" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star2" x="836" y="500" height="3" width="3" fill="white" stroke="blue" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star2" x="255" y="512" height="3" width="3" fill="white" stroke="red" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star2" x="750" y="15" height="3" width="3" fill="white" stroke="white" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star2" x="500" y="-450" height="3" width="3" fill="white" stroke="blue" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star2" x="900" y="200" height="3" width="3" fill="white" stroke="red" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star3" x="240" y="-280" height="3" width="3" fill="white" stroke="white" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star3" x="450" y="350" height="3" width="3" fill="white" stroke="blue" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star3" x="700" y="-150" height="3" width="3" fill="white" stroke="red" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star3" x="110" y="120" height="3" width="3" fill="white" stroke="white" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star3" x="950" y="-100" height="3" width="3" fill="white" stroke="blue" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star3" x="-80" y="50" height="3" width="3" fill="white" stroke="red" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star4" x="150" y="320" height="3" width="3" fill="white" stroke="white" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star4" x="560" y="-400" height="3" width="3" fill="white" stroke="white" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star4" x="590" y="-302" height="3" width="3" fill="white" stroke="white" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star4" x="700" y="320" height="3" width="3" fill="white" stroke="white" stroke-width="6" stroke-opacity="0.1"/>
+                    <rect id="star4" x="250" y="0" height="3" width="3" fill="white" stroke="white" stroke-width="6" stroke-opacity="0.1"/>
                 </g>
 
                 <!--TÍTULO-->
