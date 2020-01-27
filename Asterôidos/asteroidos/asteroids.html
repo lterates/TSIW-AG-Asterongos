@@ -86,7 +86,7 @@
         function HandleKeyUp(e){
             keys[e.keyCode] = false;
             if (e.keyCode === 32){
-                bullets.push(new Bullet(ship.angle));
+                bullets.push(new Bullet(ship.angle)); //SpaceBar para disparar
             }
         }
 
@@ -95,31 +95,31 @@
         class Ship {
             constructor(){
                 this.visible = true; //problema de ficar visible no gameover na mesma :c
-                this.x = canvasW / 2
-                this.y = canvasH / 2
                 this.thrusting = false;
-                this.speed = 0.01
-                this.velX = 0
+                this.x = canvasW / 2 //posição inicial da nave no centro do canvas
+                this.y = canvasH / 2
+                this.speed = 0.01 //velocidade da nave
+                this.velX = 0 //velocidades vetoriais
                 this.velY = 0
-                this.rotateSpeed = 0.0005
-                this.radius = 15;
-                this.angle = 0
+                this.rotateSpeed = 0.001 //velocidade da rotação
+                this.radius = 15; //raio da nave, útil para desenhar
+                this.angle = 0 //ângulo do movimento
                 this.strokeColor = 'white'
-                this.pointerX = canvasW / 2 + 15;
+                this.pointerX = canvasW / 2 + 15; //Para onde aponta a mira 
                 this.pointerY = canvasH / 2;
             }
 
-            Rotate(dir){
-                this.angle += this.rotateSpeed * dir;
+            Rotate(vecDirection){ //função de rotação que aceita parâmentro de Direção e incrementa com a rotação recebida pelas Keys
+                this.angle += this.rotateSpeed * vecDirection;
             }
 
             Update(){
                 let radians = this.angle / Math.PI * 180;
-                if (this.thrusting) {
+                if (this.thrusting) {   // Se a nave se estiver a mexer, a velocidade vai incrementar com o constante velocidade (speed)
                     this.velX += Math.cos(radians) * this.speed;
                     this.velY += Math.sin(radians) * this.speed;
                 }
-                if (this.x < this.radius) {
+                if (this.x < this.radius) { //limites do canvas e reposicionamento para que a nave nunca saia nem desapareça do "ecrã"
                     this.x = canvas.width
                 }
                 if (this.x > canvas.width) {
@@ -131,21 +131,21 @@
                 if (this.y > canvas.height) {
                     this.y = this.radius
                 }
-                this.velX *= 0.994
+                this.velX *= 0.994 // Quando o utilizador não está a premir o W, a nave para lentamente, simulando fricção a um ritmo constante
                 this.velY *= 0.994
 
-                this.x -= this.velX;
+                this.x -= this.velX; //desaceleração
                 this.y -= this.velY;
             }
 
             Draw(){
                 ctx.strokeStyle = this.strokeColor;
                 ctx.beginPath();
-                let vertAngle = ((Math.PI *2) / 3);
+                let vertAngle = ((Math.PI *2) / 3); //Preparar o desenho da nave como um circulo dividido em 3 partes
                 let radians = this.angle / Math.PI * 180;
                 this.pointerX = this.x - this.radius * Math.cos(radians)
                 this.pointerY = this.y - this.radius * Math.sin(radians)
-                for (let i = 0; i < 3; i++){
+                for (let i = 0; i < 3; i++){ //Desenha a nave com 3 vértices, sendo um triângulo equilátero
                     ctx.lineTo(this.x - this.radius * Math.cos(vertAngle * i + radians),
                     this.y - this.radius * Math.sin(vertAngle * i + radians));
                 }
@@ -158,18 +158,18 @@
         class Bullet{
             constructor(angle){
                 this.visible = true;
-                this.x = ship.pointerX;
-                this.y = ship.pointerY;
                 this.angle = angle
-                this.height = 4;
-                this.width = 4;
                 this.speed = 5;
+                this.x = ship.pointerX;  //Igualar a origem das balas ao Pointer da Nave, ou seja, onde vão sair
+                this.y = ship.pointerY;                
                 this.velX = 0
                 this.velY = 0
+                this.height = 4;
+                this.width = 4;
             }
             Update(){
                 let radians = this.angle / Math.PI * 180
-                this.x -= Math.cos(radians) * this.speed;
+                this.x -= Math.cos(radians) * this.speed; //Update da posição consoante o angulo e a velocidade da bala no construtor
                 this.y -= Math.sin(radians) * this.speed;
             }
             Draw(){
@@ -183,15 +183,16 @@
         class Asteroid{
             constructor(x,y, radius, level, collisionRadius){
                 this.visible = true;
-                this.x = x || Math.floor(Math.random() * canvasW);
+                this.x = x || Math.floor(Math.random() * canvasW); //Posições aleatóriamente geradas no começo do nível
                 this.y = y ||Math.floor(Math.random() * canvasH);
                 this.speed = 1;
-                this.radius = radius || 50;
-                this.angle = Math.floor(Math.random() * 359)
+                this.radius = radius || 50; //raio de cada asteroide (Preparado como um círculo)
+                this.angle = Math.floor(Math.random() * 359) //ângulo do movimento e rotação de cada asteróide
                 this.strokeColor = 'white';
-                this.collisionRadius = collisionRadius || 46;
-                this.level = level || 1;
+                this.collisionRadius = collisionRadius || 46; //Raio de colisão (é inferior porque dá algumas vantagens de realismo)
+                this.level = level || 1; //nível de destruição do asteroide (nivel 2 corresponde ao primeiro hit e 3 ao terceiro hit)
             }
+
             Update(){
                 let radians = this.angle / Math.PI * 180
                 this.x -= Math.cos(radians) * this.speed;
@@ -215,9 +216,9 @@
             }
             Draw(){
                 ctx.beginPath()
-                let vertAngle = ((Math.PI *2) / 5)
+                let vertAngle = ((Math.PI *2) / 5)  //Divisão do circulo em 5 partes iguais
                 let radians = this.angle / Math.PI * 180
-                for (let i = 0; i < 5; i++){
+                for (let i = 0; i < 5; i++){  //Desenho do Pentágono como Asteroide, por cada vertice
                     ctx.lineTo(this.x - this.radius * Math.cos(vertAngle * i + radians),
                     this.y - this.radius * Math.sin(vertAngle * i + radians));
                 }
@@ -227,16 +228,16 @@
         }
 
         // ~~~~~~~~~~~~~~~~~~~~ COLISÕES ~~~~~~~~~~~~~~~~~~~~~~~~
-        function Collisions (p1x, p1y, r1, p2x, p2y, r2) {
-            let radiusSum;
-            let xDiff;
+        function Collisions (p1x, p1y, r1, p2x, p2y, r2) { //Função principal, que aceita argumentos de posição e raio dos dois objetos que se pretende fazer a verificação
+            let radiusSum;  //Soma dos Raios
+            let xDiff; 
             let yDiff
             
             radiusSum = r1 + r2;
-            xDiff = p1x - p2x;
+            xDiff = p1x - p2x; //Diferença de posições em cada eixo de cada objeto, usado para verificar se estão concorrentes ou não
             yDiff = p1y - p2y;
-            if (radiusSum > Math.sqrt((xDiff * xDiff) + (yDiff * yDiff))){
-                return true;
+            if (radiusSum > Math.sqrt((xDiff * xDiff) + (yDiff * yDiff))){  //Verificação de, dependendo se a raiz do quadrado das diferenças de coordenadas, 
+                return true;                                                //devolve um true se forem menores que os raios combinados (ou seja overlap) ou false se não forem
             }
             else {
                 return false;
@@ -244,11 +245,11 @@
         }
 
         // Mostra as vidas restantes que o jogador tem
-        // (!) Quando o asteroide tà em level 3, a morte é instantânea, fix l8r
+        // (!) Quando a colisão entre a ship e o asteroide se dá no centro do canvas, como a nave tem de respawn lá, a colisão é True durante 1 ou dois segundos, ou seja perdes logo :c fix depois se tivermos tempo
         function LivesLeft(){
             let startX = 950;
             let startY = 10;
-            let points = [[9, 9], [-9, 9]];
+            let points = [[9, 9], [-9, 9]];    //Vidas restantes, display em naves pequeninas no canto do ecrã
             ctx.strokeStyle = 'red';
             for(let i = 0; i < lives; i++){
                 ctx.beginPath();
@@ -263,7 +264,7 @@
         
 
         function Render() {
-            ship.thrusting = (keys[87]);
+            ship.thrusting = (keys[87]); //Keys!!! Cada key no teclado tem uma key e isso é guardado no array no topo, 87 é o código do W
             if(keys[68]) {
                 ship.Rotate(1);
             }
@@ -277,29 +278,29 @@
             ctx.clearRect(0,0, canvasW, canvasH);
             ctx.fillStyle = 'white'
             ctx.font='16px "Press Start 2P"';
-            ctx.fillText('SCORE: ' + score.toString(), 20, 35)
+            ctx.fillText('SCORE: ' + score.toString(), 20, 35) //Apresentação da score e do nivel no canto do ecrã
             ctx.fillText('LEVEL: ' + step.toString(), 840, 70)
             // Vidas chegam ao fim -- GAME OVER
             if(lives <= 0){
                 document.body.removeEventListener("keydown", HandleKeyDown);
                 document.body.removeEventListener("keyup", HandleKeyUp);
-                ship.visible = false;
+                ship.visible = false;  //Não funciona e não sei porquê, deve ser uma virgula mal posta algures mas depois vemos isso
                 ctx.fillStyle = 'white';
                 ctx.font='50px "Press Start 2P"';
-                ctx.fillText('GAME OVER', canvasW / 2 - 220, canvasH / 2)
+                ctx.fillText('GAME OVER', canvasW / 2 - 220, canvasH / 2)  //Display do GAME OVER por cima do jogo quando se perde
             }      
             
             //Nível Novo no caso de derrotar todos os asteroides
             if(asteroids.length === 0){
-                step += 1;
+                step += 1;  //incrementa o nivel
                 lives +=1; //jogador recebe mais uma vida por passar ao nivel seguinte
-                ship.x = canvasW / 2;
+                ship.x = canvasW / 2; //reset da nave
                 ship.y = canvasH / 2;
                 ship.velX = 0;
                 ship.velY = 0;
-                for(let i = 0; i < 6; i++){
+                for(let i = 0; i < 6; i++){   //Repõe os asteroides
                     let asteroid = new Asteroid();
-                    asteroid.speed += .5;
+                    asteroid.speed += .5; //incrementa a velocidade dos asteroides de forma a tornar novos niveis mais dificeis
                     asteroids.push(asteroid);
                 }
             }
@@ -314,27 +315,28 @@
                         ship.y = canvasH / 2;
                         ship.velX = 0;
                         ship.velY = 0;
-                        lives -=1;
+                        lives -=1; //retira-se uma vida quando a nave colide com um asteroide
                     }
                 }
             }
             
             //Código de colisões das balas com os asteroides inspirado numa Nave
+            //Consulta do stackoverflow(!) e alterações com o código anterior, porque todo o jogo terminava assim que a colisão fosse detetada
             if (asteroids.length !== 0 && bullets.length != 0){
                 loop1:
-                for(let l = 0; l < asteroids.length; l++){
+                for(let l = 0; l < asteroids.length; l++){ //Percorre todos os asteroides e todas as balas dentros dos respetivos arrays e verifica de há colisão entre qualquer deles
                     for(let m = 0; m < bullets.length; m++){
                         if(Collisions(bullets[m].x, bullets[m].y, 3, asteroids[l].x, asteroids[l].y, asteroids[l].collisionRadius)){
-                            if(asteroids[l].level === 1){
+                            if(asteroids[l].level === 1){                                             //Sendo nível 1, separa-se em 2 asteroides menores
                                 asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 25, 2, 22));
                                 asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 25, 2, 22));
-                            } else if(asteroids[l].level === 2){
+                            } else if(asteroids[l].level === 2){                                      //Sendo nível 2, separa-se em 2 asteroides ainda mais pequenos, sendo esses o último nível possível de asteroides
                                 asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 15, 3, 12));
                                 asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 15, 3, 12));
                             }
-                            asteroids.splice(l,1);
+                            asteroids.splice(l,1); //Assim que Há uma colisão, o asteroide destruido e a bala responsável, serão spliced (eliminados) do array respetivo
                             bullets.splice(m,1);
-                            score += 20;
+                            score += 20; //a score incrementa por 20 pontos por cada hit
                             break loop1;
                         }
                     }
@@ -362,13 +364,13 @@
             }
 
             //  ~~~~~~~~~~~~~~~~~~~~ HIGH SCORE NA LOCAL STORAGE ~~~~~~~~~~~~~~~~~~~~~~~~
-            highScore = Math.max(score, highScore);
-            localStorage.setItem(localStorageName, highScore);
+            highScore = Math.max(score, highScore);  //Devolve o máximo valor entre score atual e HighScore, assim sendo, o update no ecrã pode ser dinâmicamente apresentado e guardado
+            localStorage.setItem(localStorageName, highScore); //guarda o item anterior, atualizado, na localStorage
             ctx.fillStyle = 'white';
             ctx.font = '16px "Press Start 2P"';
-            ctx.fillText("HIGHSCORE : " + highScore.toString(), 20, 70);
+            ctx.fillText("HIGHSCORE : " + highScore.toString(), 20, 70); //Apresenta a score
 
-            requestAnimationFrame(Render);
+            requestAnimationFrame(Render); //Render Final
         }
     </script>
 </body>
