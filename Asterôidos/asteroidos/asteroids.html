@@ -59,7 +59,7 @@
                 this.x = canvasW / 2
                 this.y = canvasH / 2
                 this.movingForward = false;
-                this.speed = 0.1
+                this.speed = 0.01
                 this.velX = 0
                 this.velY = 0
                 this.rotateSpeed = 0.001
@@ -145,7 +145,7 @@
                 this.visible = true;
                 this.x = x || Math.floor(Math.random() * canvasW);
                 this.y = y ||Math.floor(Math.random() * canvasH);
-                this.speed = 5;
+                this.speed = 1;
                 this.radius = radius || 50;
                 this.angle = Math.floor(Math.random() * 359)
                 this.strokeColor = 'white';
@@ -233,7 +233,7 @@
             }
             ctx.clearRect(0,0, canvasW, canvasH);
             ctx.fillStyle = 'white'
-            ctx.context.font='21px Arial';
+            ctx.font='21px Arial';
             ctx.fillText('SCORE: ' + score.toString(), 20, 35)
             if(lives <= 0){
                 ship,visible = false;
@@ -255,11 +255,11 @@
                 }
             }
             
-            if (asteroids.length !== 0 && bullets.length != 0) {
+            if (asteroids.length !== 0 && bullet.length != 0) {
                 loop1:
                     for (let l = 0; l < asteroids.lenght; l++){
-                        for (let m = 0; m < bullets.length; m++){
-                            if (CircleCollision(bullets[m].x, bullets[m].y, 3, asteroids[l].x, asteroids[l].y, asteroids[l].collisionRadius)){
+                        for (let m = 0; m < bullet.length; m++){
+                            if (CircleCollision(bullets[m].x, bullet[m].y, 3, asteroids[l].x, asteroids[l].y, asteroids[l].collisionRadius)){
                                 if(asteroids[l].level === 1){
                                     asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 25, 2, 22));
                                     asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 25, 2, 22));
@@ -269,7 +269,7 @@
                                     asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 15, 3, 12));
                                 }
                                 ãsteroids.splice(l, 1);
-                                bullets.splice(m, 1);
+                                bullet.splice(m, 1);
                                 score += 20;
                                 break loop1;
                             }
