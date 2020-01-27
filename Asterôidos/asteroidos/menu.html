@@ -9,7 +9,25 @@
     <link rel="stylesheet" type="text/css" href="asterongo.css">
     <!-- Fonte Retrozinha fofinha lindinha-->
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        #start:hover {
+            fill: red;
+            stroke: white;
+            stroke-width: 3px;
+        }
 
+        #controls:hover {
+            fill: red;
+            stroke: white;
+            stroke-width: 3px;
+        }
+
+        #quit:hover {
+            fill: red;
+            stroke: white;
+            stroke-width: 3px;
+        }
+    </style>
 </head>
 
 <body>
@@ -18,32 +36,58 @@
         <div style="border: 1px solid white ; width: 1000px; height: 900px;"> <br><br><br>
             <!--GRUPO SVG-->
             <svg width="600" height="700" style="overflow: visible">
+                <g id="starsBackground" transform="rotate(45 5 5)">
+                    <rect x="110" y="120" height="3" width="3" fill="white" stroke="white" stroke-width="4" stroke-opacity="0.8"/>
+                    <rect x="450" y="650" height="3" width="3" fill="white" stroke="blue" stroke-width="4" stroke-opacity="0.5"/>
+                    <rect x="200" y="420" height="3" width="3" fill="white" stroke="red" stroke-width="4" stroke-opacity="0.5"/>
+                    
+                    <rect x="340" y="180" height="3" width="3" fill="white" stroke="white" stroke-width="4" stroke-opacity="0.8"/>
+                    <rect x="438" y="-120" height="3" width="3" fill="white" stroke="blue" stroke-width="4" stroke-opacity="0.5"/>
+                    <rect x="322" y="98" height="3" width="3" fill="white" stroke="red" stroke-width="4" stroke-opacity="0.5"/>
+                    
+                    <rect x="260" y="293" height="3" width="3" fill="white" stroke="white" stroke-width="4" stroke-opacity="0.8"/>
+                    <rect x="836" y="500" height="3" width="3" fill="white" stroke="blue" stroke-width="4" stroke-opacity="0.5"/>
+                    <rect x="255" y="512" height="3" width="3" fill="white" stroke="red" stroke-width="4" stroke-opacity="0.5"/>
+                    
+                    <rect x="750" y="15" height="3" width="3" fill="white" stroke="white" stroke-width="4" stroke-opacity="0.8"/>
+                    <rect x="500" y="-450" height="3" width="3" fill="white" stroke="blue" stroke-width="4" stroke-opacity="0.5"/>
+                    <rect x="900" y="200" height="3" width="3" fill="white" stroke="red" stroke-width="4" stroke-opacity="0.5"/>
+                    
+                    <rect x="240" y="-280" height="3" width="3" fill="white" stroke="white" stroke-width="4" stroke-opacity="0.8"/>
+                    <rect x="450" y="350" height="3" width="3" fill="white" stroke="blue" stroke-width="4" stroke-opacity="0.5"/>
+                    <rect x="700" y="-150" height="3" width="3" fill="white" stroke="red" stroke-width="4" stroke-opacity="0.5"/>
+                    
+                    <rect x="110" y="120" height="3" width="3" fill="white" stroke="white" stroke-width="4" stroke-opacity="0.8"/>
+                    <rect x="950" y="-100" height="3" width="3" fill="white" stroke="blue" stroke-width="4" stroke-opacity="0.5"/>
+                    <rect x="200" y="420" height="3" width="3" fill="white" stroke="red" stroke-width="4" stroke-opacity="0.5"/>
+                </g>
+
                 <!--TÍTULO-->
                 <g id="title">
-                    <text fill="white" x="3" y="75" font-size="60px">ASTERONGOS</text>
+                    <text fill="white" x="3" y="125" font-size="60px">ASTERONGOS</text>
                 </g>
 
                 <!--MENU-->
                 <a href="asteroids.html">
-                    <text id="start" font-size="40" fill="white" x="130" y="300">START</text>
+                    <text id="start" font-size="40" fill="white" x="130" y="350">START</text>
                 </a>
                 <a href="menuControls.html">
-                    <text id="controls" font-size="40" fill="white" x="130" y="400">CONTROLS</text>
-                <a href="javascript:close_window();">
-                    <text id="quit" font-size="40" fill="white" x="130" y="500">QUIT</text>
+                    <text id="controls" font-size="40" fill="white" x="130" y="450">CONTROLS</text>
                 </a>
-                <text id="quit" font-size="22" fill="white" x="-180" y="820">Developed by Eduardo Ferreira & Maria Santos</text>
+                <a href="javascript:close_window();">
+                    <text id="quit" font-size="40" fill="white" x="130" y="550">QUIT</text>
+                </a>
+                <text font-size="22" fill="white" x="-180" y="820">Developed by Eduardo Ferreira & Maria Santos</text>
             </svg>
         </div>
-        <button onclick="window.location.href = 'asteroids.html';">JOGO</button>
     </div>
 
     <script>
-    function close_window() {
-        if (confirm("Fechar ASTERONGOS?")) {
-            close();
+        function close_window() {
+            if (confirm("Fechar ASTERONGOS?")) {
+                close();
+            }
         }
-    }
     </script>
 </body>
 
