@@ -7,10 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Asterongos</title>
     <link rel="stylesheet" type="text/css" href="asterongo.css">
+    <!-- Fonte Retrozinha fofinha lindinha-->
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
-    <div id='container'>
+    <div style="font-family:'Press Start 2P'; color:white; text-align: center;" id='container'>
+        A S T E R O N G O S
         <canvas id="myCanvas"></canvas>
     </div>
 
@@ -69,7 +73,8 @@
             Render()
         }
 
-        // Mais EventHandlers para poder proibir o movimento da nave após o Game Over
+        // Os EventHandlers movidos para poder proibir o movimento da nave após o Game Over
+        //Já funcionam
         function HandleKeyDown(e){
             keys[e.keyCode] = true;
         }
@@ -87,11 +92,11 @@
                 this.visible = true;
                 this.x = canvasW / 2
                 this.y = canvasH / 2
-                this.movingForward = false;
+                this.thrusting = false;
                 this.speed = 0.01
                 this.velX = 0
                 this.velY = 0
-                this.rotateSpeed = 0.001
+                this.rotateSpeed = 0.0005
                 this.radius = 15;
                 this.angle = 0
                 this.strokeColor = 'white'
@@ -105,7 +110,7 @@
 
             Update(){
                 let radians = this.angle / Math.PI * 180;
-                if (this.movingForward) {
+                if (this.thrusting) {
                     this.velX += Math.cos(radians) * this.speed;
                     this.velY += Math.sin(radians) * this.speed;
                 }
@@ -121,8 +126,8 @@
                 if (this.y > canvas.height) {
                     this.y = this.radius
                 }
-                this.velX *= 0.99
-                this.velY *= 0.99
+                this.velX *= 0.994
+                this.velY *= 0.994
 
                 this.x -= this.velX;
                 this.y -= this.velY;
@@ -163,7 +168,7 @@
                 this.y -= Math.sin(radians) * this.speed;
             }
             Draw(){
-                ctx.fillStyle = 'white';
+                ctx.fillStyle = 'red';
                 ctx.fillRect(this.x, this.y, this.width, this.height);
             }
         }
@@ -185,7 +190,7 @@
                 let radians = this.angle / Math.PI * 180
                 this.x -= Math.cos(radians) * this.speed;
                 this.y -= Math.sin(radians) * this.speed;
-                if (this.movingForward) {
+                if (this.thrusting) {
                     this.velX += Math.cos(radians) * this.speed;
                     this.velY += Math.sin(radians) * this.speed;
                 }
@@ -204,9 +209,9 @@
             }
             Draw(){
                 ctx.beginPath()
-                let vertAngle = ((Math.PI *2) / 6)
+                let vertAngle = ((Math.PI *2) / 5)
                 let radians = this.angle / Math.PI * 180
-                for (let i = 0; i < 6; i++){
+                for (let i = 0; i < 5; i++){
                     ctx.lineTo(this.x - this.radius * Math.cos(vertAngle * i + radians),
                     this.y - this.radius * Math.sin(vertAngle * i + radians));
                 }
@@ -216,7 +221,7 @@
         }
 
         // ~~~~~~~~~~~~~~~~~~~~ COLISÕES ~~~~~~~~~~~~~~~~~~~~~~~~
-        function CircleCollision (p1x, p1y, r1, p2x, p2y, r2) {
+        function Collisions (p1x, p1y, r1, p2x, p2y, r2) {
             let radiusSum;
             let xDiff;
             let yDiff
@@ -234,11 +239,11 @@
 
         // Mostra as vidas restantes que o jogador tem
         // (!) Quando o asteroide tà em level 3, a morte é instantânea, fix l8r
-        function DrawLifeShips(){
+        function LivesLeft(){
             let startX = 950;
             let startY = 10;
             let points = [[9, 9], [-9, 9]];
-            ctx.strokeStyle = 'white';
+            ctx.strokeStyle = 'red';
             for(let i = 0; i < lives; i++){
                 ctx.beginPath();
                 ctx.moveTo(startX, startY);
@@ -252,7 +257,7 @@
         
 
         function Render() {
-            ship.movingForward = (keys[87]);
+            ship.thrusting = (keys[87]);
             if(keys[68]) {
                 ship.Rotate(1);
             }
@@ -264,22 +269,23 @@
             }
             ctx.clearRect(0,0, canvasW, canvasH);
             ctx.fillStyle = 'white'
-            ctx.font='20px Arial';
+            ctx.font='16px "Press Start 2P"';
             ctx.fillText('SCORE: ' + score.toString(), 20, 35)
-            ctx.fillText('LEVEL: ' + step.toString(), 880, 70)
+            ctx.fillText('LEVEL: ' + step.toString(), 840, 70)
             // Vidas chegam ao fim -- GAME OVER
             if(lives <= 0){
                 document.body.removeEventListener("keydown", HandleKeyDown);
                 document.body.removeEventListener("keyup", HandleKeyUp);
                 ship.visible = false;
                 ctx.fillStyle = 'white';
-                ctx.font='50px Arial';
-                ctx.fillText('GAME OVER', canvasW / 2 - 150, canvasH / 2)
+                ctx.font='50px "Press Start 2P"';
+                ctx.fillText('GAME OVER', canvasW / 2 - 220, canvasH / 2)
             }      
             
             //Nível Novo no caso de derrotar todos os asteroides
             if(asteroids.length === 0){
                 step += 1;
+                lives +=1; //jogador recebe mais uma vida por passar ao nivel seguinte
                 ship.x = canvasW / 2;
                 ship.y = canvasH / 2;
                 ship.velX = 0;
@@ -291,11 +297,12 @@
                 }
             }
 
-            DrawLifeShips();
+            LivesLeft();
             
+            //Sempre que há asteróides em jogo, tá a ser calculado se há colisões ou não
             if (asteroids.length !== 0) {
                 for (let k = 0; k< asteroids.length; k++){
-                    if(CircleCollision(ship.x, ship.y, 11, asteroids[k].x, asteroids[k].y, asteroids[k].collisionRadius)){
+                    if(Collisions(ship.x, ship.y, 11, asteroids[k].x, asteroids[k].y, asteroids[k].collisionRadius)){
                         ship.x = canvasW / 2;
                         ship.y = canvasH / 2;
                         ship.velX = 0;
@@ -309,8 +316,8 @@
                 loop1:
                 for(let l = 0; l < asteroids.length; l++){
                     for(let m = 0; m < bullets.length; m++){
-                        if(CircleCollision(bullets[m].x, bullets[m].y, 3, asteroids[l].x, asteroids[l].y, asteroids[l].collisionRadius)){
-                            if(asteroids[l].level === 1){
+                        if(Collisions(bullets[m].x, bullets[m].y, 3, asteroids[l].x, asteroids[l].y, asteroids[l].collisionRadius)){
+                            if(asateroids[l].level === 1){
                                 asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 25, 2, 22));
                                 asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 25, 2, 22));
                             } else if(asteroids[l].level === 2){
@@ -349,8 +356,9 @@
             //  ~~~~~~~~~~~~~~~~~~~~ HIGH SCORE NA LOCAL STORAGE ~~~~~~~~~~~~~~~~~~~~~~~~
             highScore = Math.max(score, highScore);
             localStorage.setItem(localStorageName, highScore);
-            ctx.font = '20px Arial';
-            ctx.fillText("HIGH SCORE : " + highScore.toString(), 20, 70);
+            ctx.fillStyle = 'white';
+            ctx.font = '16px "Press Start 2P"';
+            ctx.fillText("HIGHSCORE : " + highScore.toString(), 20, 70);
 
             requestAnimationFrame(Render);
         }
